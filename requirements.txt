@@ -1,0 +1,4 @@
+telethon
+aiohttp
+redis
+GitPython
