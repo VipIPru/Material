@@ -30,7 +30,11 @@ class MaterialTerminalMod(loader.Module):
         """Исползовать терминал"""
         await utils.answer(message, "👻")
         
-        args = utils.get_args_raw(message)
+        try:
+            args = utils.get_args_raw(message)
+        except:
+            await utils.answer(message, "❔ А какую команду выполнять то?")
+            return
         output = await bash_exec(args)
 
         await utils.answer(

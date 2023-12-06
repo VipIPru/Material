@@ -25,6 +25,19 @@ class Dispatcher:
 
         self.tg_id = self._client.tg_id
 
+    async def handle_event(self, event: typing.Union[events.NewMessage, events.MessageEdited]):
+        """Handle event."""
+
+        message: Message = event.message
+        prefix = self._db.get("material.dispatcher", "command_prefix", ".")
+        try:
+            if message.text[:1] != prefix:
+                return False
+        except:
+            return False
+
+        await self.handle_command(event)
+
     async def future_dispatcher(
         self,
         callback: typing.Awaitable,

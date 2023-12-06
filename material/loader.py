@@ -50,11 +50,11 @@ class Modules:
         """Intiliaze dispatcher."""
 
         self._client.add_event_handler(
-            self._dispatcher.handle_command, events.NewMessage()
+            self._dispatcher.handle_event, events.NewMessage()
         )
 
         self._client.add_event_handler(
-            self._dispatcher.handle_command, events.MessageEdited()
+            self._dispatcher.handle_event, events.MessageEdited()
         )
 
         self._client.dp_initialized = True

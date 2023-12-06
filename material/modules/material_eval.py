@@ -42,12 +42,10 @@ class EvalMod(loader.Module):
                 'self': self,
                 'client': self._client,
                 'app': self._client,
-                'db': self._db,
                 'utils': utils,
                 'loader': loader,
                 'telethon': __import__('telethon'),
                 'message': message,
-                'reply': await message.get_reply_message(),
                 'args': args,
             }
         )

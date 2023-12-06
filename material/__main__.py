@@ -4,4 +4,4 @@ log.init()
 try:
     main.material.main()
 except KeyboardInterrupt:
-    print("Словлено")
+    print("Material is OFF")

@@ -14,7 +14,7 @@ class HelpMod(loader.Module):
 
     strings = {
         "name": "Help",
-        "help": ("<b>👻 {} модули</b>" "\n\n{}"),
+        "help": ("<b>👻 {} модулей</b>" "\n\n{}"),
         "module": "<b>🔸{} ( </b>{}<b> )</b>\n",
         "nodocmod": "У этого модуля нет описания",
         "nodoccmd": "У этой команды нет описания",
@@ -28,7 +28,10 @@ class HelpMod(loader.Module):
     async def helpcmd(self, message: Message):
         """Список всех модулей и комманд"""
 
-        args = utils.get_args_raw(message)
+        try:
+            args = utils.get_args_raw(message)
+        except:
+            args = False
 
         if args:
             await self.modhelp(message, args)
