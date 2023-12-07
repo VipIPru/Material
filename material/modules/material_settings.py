@@ -20,7 +20,7 @@ class MaterialSettingsMod(loader.Module):
         await utils.answer(message, "👻")
 
         ping = round((time.perf_counter_ns() - start) / 10**6, 3)
-        uptime = str(timedelta(seconds=round(time.perf_counter() - utils.init_ts)))
+        uptime = utils.get_uptime()
 
         await utils.answer(
             message,
@@ -30,7 +30,7 @@ class MaterialSettingsMod(loader.Module):
     
     async def setprefixcmd(self, message: Message):
         """Установить префикс команд"""
-        old_prefix = self._db.get("material.dispatcher", "command_prefix", ".")
+        old_prefix = self.get_prefix()
         try:
             new_prefix = message.text.split()[1]
         except IndexError:

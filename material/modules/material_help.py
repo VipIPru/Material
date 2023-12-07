@@ -19,7 +19,7 @@ class HelpMod(loader.Module):
         "nodocmod": "У этого модуля нет описания",
         "nodoccmd": "У этой команды нет описания",
         "modhelp": ("<b>🔸 {}</b>" "\nℹ <b>{}</b>" "\n\n<b>Команды: </b>{}"),
-        "support": "<b>Ссылка на <a href='https://t.me/MaterialUB_talks'>Support</a> чат!</b>",
+        "support": "<b>Ссылка на <a href='https://t.me/Material_Support'>Support</a> чат!</b>",
     }
 
     def __init__(self) -> None:
@@ -85,7 +85,7 @@ class HelpMod(loader.Module):
 
         for _name, func in module.material_commands.items():
             cmds += ("\n" "<code>{}{}</code><b> - {}</b>").format(
-                self._db.get("material.dispatcher", "command_prefix", "."),
+                self.get_prefix(),
                 _name,
                 inspect.getdoc(func) if func.__doc__ else self.strings["nodoccmd"],
             )

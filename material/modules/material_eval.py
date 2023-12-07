@@ -32,7 +32,7 @@ class EvalMod(loader.Module):
 
     strings = {
         'name': 'Eval',
-        'eval': '👻 Код:\n<pre language="python">{}</pre>\n💻 Результат:\n<code>{}</code>'
+        'eval': '👻 Код:\n<pre language="python">{}</pre>\n💻 Результат:\n<pre language="python">{}</pre>'
     }
     
     async def ecmd(self, message: Message):
@@ -51,6 +51,7 @@ class EvalMod(loader.Module):
                 'telethon': __import__('telethon'),
                 'message': message,
                 'reply': await message.get_reply_message(),
+                'r': await message.get_reply_message(),
                 'args': args,
             }
         )

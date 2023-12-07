@@ -8,12 +8,8 @@ class MaterialInfoMod(loader.Module):
 
     strings = {
         "name": "Info",
-        "owner": "Owner",
-        "version": "Version",
-        "build": "Build",
-        "prefix": "Prefix",
-        "uptime": "Uptime",
-        "branch": "Branch",
+        "banner_url": "https://0x0.st/H3Kw.jpg",
+        "message.text": "👻 Material\n\n👤 Владелец: {owner}\n\n⚙️ Версия: {version} {build}\n\n⌨️ Префикс: « {prefix} »\n🕔 Аптайм: {uptime}\n\n{platform}",
     }
 
     def __init__(self) -> None:
@@ -22,17 +18,56 @@ class MaterialInfoMod(loader.Module):
     async def infocmd(self, message: Message):
         """Показать информацию юзерота"""
 
-        prefix = self._db.get("material.dispatcher", "command_prefix", ".")
-        me = await self._client.get_me()
-        name = me.first_name
-        await utils.answer(
+        inf = {
+            "owner": "",
+            "version": "",
+            "build": "",
+            "prefix": ".",
+            "uptime": "",
+            "platform": "",
+        }
+
+        # Owner
+        try:
+            me = await self._client.get_me()
+            name = me.first_name
+            inf["owner"] = name
+        except:
+            pass
+
+        # Version
+        try:
+            inf["version"] = utils.get_version()
+        except:
+            pass
+
+        # Build
+        try:
+            inf["build"] = utils.get_git_commit_url()
+        except:
+            pass
+
+        # Prefix
+        try:
+            inf["prefix"] = self.get_prefix()
+        except:
+            pass
+
+        # Uptime
+        try:
+            inf["uptime"] = utils.get_uptime()
+        except:
+            pass
+
+        # Platform
+        try:
+            inf["platform"] = utils.get_platform()
+        except:
+            pass
+
+        # Answer File.
+        await utils.answer_file(
             message,
-            """
-👻 Material
-
-Владелец: {}
-Версия: 0.1.0
-Префикс: « {} »
-
-        """.format(name, prefix),
+            self.strings["banner_url"],
+            self.strings["message.text"].format(**inf),
         )

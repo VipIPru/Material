@@ -5,15 +5,19 @@ import typing
 import asyncio
 import json
 import time
+import contextlib
 
 
 from git import Repo
 
+from datetime import timedelta
+import time
 
 from telethon.tl.custom import Message
 
-
 from ._types import FormattingEntity
+
+from telethon import events
 
 
 def escape_html(text: str, /) -> str:  # sourcery skip
@@ -27,34 +31,85 @@ def escape_html(text: str, /) -> str:  # sourcery skip
 def get_args(message: Message) -> typing.List[str]:
     """Get arguments in message"""
 
-    text = message.text
-    if not text:
-        return False
-
-    split = text.split(" ", maxsplit=1)
-    if len(split) <= 1:
-        return False
-
-    split = split[1]
-
     try:
-        split = shlex.split(split)
-    except:
-        return split
+        text = message.text
+        if not text:
+            return False
 
-    return list(filter(lambda x: len(x) > 0, split))
+        split = text.split(" ", maxsplit=1)
+        if len(split) <= 1:
+            return False
+
+        split = split[1]
+
+        try:
+            split = shlex.split(split)
+        except:
+            return split
+
+        return list(filter(lambda x: len(x) > 0, split))
+    except:
+        return False
 
 
 def get_args_raw(message: Message) -> str:
     """Get raw arguments"""
 
-    args = get_args(message)
+    if args := get_args(message):
+        return " ".join(args)
+    
+    return args
 
-    return " ".join(args)
+
+def get_topic(message: Message) -> typing.Optional[int]:
+    """
+    Get topic id of message
+    :param message: Message to get topic of
+    :return: int or None if not present
+    """
+    return (
+        (message.reply_to.reply_to_top_id or message.reply_to.reply_to_msg_id)
+        if (
+            isinstance(message, Message)
+            or isinstance(message, Message)
+            or isinstance(message, events.NewMessage.Event)
+            and message.reply_to
+            and message.reply_to.forum_topic
+        )
+        else None
+    )
 
 
 async def answer(message: Message, text: str, *args, **kwargs):
+    """Answer message."""
     return await (message.edit if message.out else message.respond)(text, *args, **kwargs)
+
+
+async def answer_file(
+    message: Message,
+    file: typing.Union[str, bytes],
+    caption: typing.Optional[str] = None,
+    **kwargs,
+):
+    """Answer message file."""
+
+    if topic := get_topic(message):
+        kwargs.setdefault("reply_to", topic)
+
+    try:
+        response = await message.client.send_file(
+            message.peer_id,
+            file,
+            caption=caption,
+            **kwargs,
+        )
+    except Exception:
+        return await answer(message, caption, **kwargs)
+
+    with contextlib.suppress(Exception):
+        await message.delete()
+
+    return response
 
 
 def get_base_dir() -> str:
@@ -79,7 +134,7 @@ def get_git_commit_url() -> str:
     """Get URL to latest commit"""
     try:
         hash = get_git_hash()
-        return f'a href="https://github.com/Material-ub/Material/commit/{hash}>#{hash[:7]}</a>'
+        return f'<a href="https://github.com/Material-ub/Material/commit/{hash}">#{hash[:7]}</a>'
     except:
         return "Unknown"
 
@@ -148,6 +203,8 @@ def relocate_entities(
 
     return entities
 
+def get_uptime():
+    return str(timedelta(seconds=round(time.perf_counter() - init_ts)))
 
 async def fw_protect():
     await asyncio.sleep(random.randint(1, 4))
