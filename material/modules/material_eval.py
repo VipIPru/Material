@@ -32,7 +32,7 @@ class EvalMod(loader.Module):
 
     strings = {
         'name': 'Eval',
-        'eval': '👻 Код:\n<code>{}</code>\n💻 Результат:\n<code>{}</code>'
+        'eval': '👻 Код:\n<pre language="python">{}</pre>\n💻 Результат:\n<code>{}</code>'
     }
     
     async def ecmd(self, message: Message):
