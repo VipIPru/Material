@@ -24,8 +24,8 @@ class MaterialSettingsMod(loader.Module):
 
         await utils.answer(
             message,
-            f"👻 Скорость отклика Telegram: <code>{ping}ms</code>\n"
-            f"🕓 Прошло с последней перезагрузки: <code>{uptime}</code>"
+            f"👻 <b>Скорость отклика Telegram:</b> <code>{ping}</code> <b>ms</b>\n"
+            f"🕓 <b>Прошло с последней перезагрузки:</b> <code>{uptime}</code>"
         )
     
     async def setprefixcmd(self, message: Message):

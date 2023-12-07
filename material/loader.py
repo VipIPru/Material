@@ -118,7 +118,7 @@ class Modules:
                 logger.debug("Replacing command for %r", self.commands[command])
 
             self.commands.update({command.lower(): instance.material_commands[command]})
-            return True
+        return True
 
     def register_inline_handlers(self, instance: Module) -> bool:
         """Register inline handlers from instance."""

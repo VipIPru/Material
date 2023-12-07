@@ -16,6 +16,14 @@ from telethon.tl.custom import Message
 from ._types import FormattingEntity
 
 
+def escape_html(text: str, /) -> str:  # sourcery skip
+    """
+    Pass all untrusted/potentially corrupt input here
+    :param text: Text to escape
+    :return: Escaped text
+    """
+    return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
 def get_args(message: Message) -> typing.List[str]:
     """Get arguments in message"""
 

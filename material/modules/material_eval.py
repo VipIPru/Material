@@ -1,5 +1,4 @@
 import ast
-from html import escape
 
 from .. import loader, utils
 from telethon.tl.types import Message
@@ -31,10 +30,15 @@ async def execute_python_code(code, env={}):
 class EvalMod(loader.Module):
     """Используйте eval прямо через Material!"""
 
-    strings = {'name': 'Eval'}
+    strings = {
+        'name': 'Eval',
+        'eval': '👻 Код:\n<code>{}</code>\n💻 Результат:\n<code>{}</code>'
+    }
     
     async def ecmd(self, message: Message):
         """Запустить команду eval на языке Python"""
+
+        await utils.answer(message, "👻")
         args = utils.get_args_raw(message)
         result = await execute_python_code(
             args,
@@ -46,6 +50,7 @@ class EvalMod(loader.Module):
                 'loader': loader,
                 'telethon': __import__('telethon'),
                 'message': message,
+                'reply': await message.get_reply_message(),
                 'args': args,
             }
         )
@@ -55,11 +60,8 @@ class EvalMod(loader.Module):
                 result = str(result.stringify())
             except:
                 pass
-
+        
         await utils.answer(
             message,
-            "<b>🐍 Code</b>:\n"
-            f"<code>{args}</code>\n"
-            "<b>💻 Output</b>:\n"
-            f"<code>{escape(result)}</code>"
+            self.strings["eval"].format(args, utils.escape_html(result))
         )
