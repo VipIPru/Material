@@ -93,8 +93,11 @@ async def answer_file(
 ):
     """Answer message file."""
 
-    if topic := get_topic(message):
-        kwargs.setdefault("reply_to", topic)
+    try:
+        if topic := get_topic(message):
+            kwargs.setdefault("reply_to", topic)
+    except:
+        pass
 
     try:
         response = await message.client.send_file(
