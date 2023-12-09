@@ -198,6 +198,9 @@ class Modules:
         instance.db = self._db
         instance._db = self._db
 
+        instance.aliases = self.aliases
+        instance._aliases = self.aliases
+
         instance.client = self._client
         instance._client = self._client
 
