@@ -16,6 +16,7 @@ class MaterialSettingsMod(loader.Module):
 
     async def pingcmd(self, message: Message):
         """Команда для просмотра пинга."""
+
         start = time.perf_counter_ns()
         await utils.answer(message, "👻")
 
@@ -30,14 +31,19 @@ class MaterialSettingsMod(loader.Module):
     
     async def setprefixcmd(self, message: Message):
         """Установить префикс команд"""
+
         old_prefix = self.get_prefix()
+
         try:
             new_prefix = message.text.split()[1]
+
         except IndexError:
             await utils.answer(message, "❔ А какой префикс ставить то?")
+
         if len(new_prefix) > 1:
             await utils.answer(message, "⚠️ Префикс должен состоять только из одного символа")
             return
         
         self._db.set("material.dispatcher", "command_prefix", new_prefix)
+
         await utils.answer(message, "✅ Префикс обновлен. Чтобы вернуть его, используй <code>{}setprefix {}</code>".format(new_prefix, old_prefix))
